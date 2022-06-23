@@ -8,8 +8,8 @@ from keras.optimizers import Adam, RMSprop, SGD
 import os
 
 class DQNAgent(RLAgent):
-    def __init__(self, action_space, ob_generator, reward_generator, \\REWARD GENERATOR 2 (PRESSURE), iid):
-        super().__init__(action_space, ob_generator, reward_generator)
+    def __init__(self, action_space, ob_generator, reward_generator, reward_generator2 (PRESSURE), iid):
+        super().__init__(action_space, ob_generator, reward_generator, reward_generator2)
 
         self.iid = iid
 
@@ -31,12 +31,43 @@ class DQNAgent(RLAgent):
         self.target_model = self._build_model()
         self.update_target_network()
 
+#########################  REUTILIZAR?  ####################################
+    def compute_hypervolume(q_set, nA, ref):
+        q_values = np.zeros(nA)
+        for i in range(nA):
+            # pygmo uses hv minimization,
+            # negate rewards to get costs
+            points = np.array(q_set[i]) * -1.
+            hv = hypervolume(points)
+            # use negative ref-point for minimization
+            q_values[i] = hv.compute(ref*-1)
+        return q_values
+#############################################################################
+
     def get_action(self, ob):
         if np.random.rand() <= self.epsilon:
             return self.action_space.sample()
         ob = self._reshape_ob(ob)
         act_values = self.model.predict(ob)
         return np.argmax(act_values[0])
+
+        """
+        SOFTMAX
+        def action_selection(state, q_set, epsilon, ref):
+            q_values = compute_hypervolume(q_set, q_set.shape[0], ref)
+
+            denominator = 0
+            probability_vector = []
+
+            for q_value in q_values: #calculate the denominator for softmax (sum of e^q_value)
+                denominator += (np.e ** (q_value/epsilon))
+            for q_value in q_values: #calculate the choice probability for each q_value to an array of probabilities
+                probability_vector.append(((np.e ** (q_value/epsilon))/(denominator)))
+
+            action = np.argwhere(q_values == (np.random.choice(q_values, 1, probability_vector))).flatten() #select an action (q_values) biased by its probability (probability_vector)
+
+            return action[0]
+        """
 
     def sample(self):
         return self.action_space.sample()
