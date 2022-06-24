@@ -56,7 +56,7 @@ for i in world.intersections:
         action_space,
         LaneVehicleGenerator(world, i, ["lane_count"], in_only=True, average=None),
         LaneVehicleGenerator(world, i, ["lane_waiting_count"], in_only=True, average="all", negative=True),
-        LaneVehicleGenerator(world, i, ["pressure"], ???????????????????),
+        LaneVehicleGenerator(world, i, ["lane_waiting_count"], in_only=True, average="all", negative=True),
         i.id
     ))
     if args.load_model:

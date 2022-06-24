@@ -4,11 +4,13 @@ import numpy as np
 from collections import deque
 from keras.models import Sequential
 from keras.layers import Dense
-from keras.optimizers import Adam, RMSprop, SGD
+from tensorflow.keras.optimizers import RMSprop,SGD
+
+#from keras.optimizers import RMSprop, SGD
 import os
 
 class DQNAgent(RLAgent):
-    def __init__(self, action_space, ob_generator, reward_generator, reward_generator2 (PRESSURE), iid):
+    def __init__(self, action_space, ob_generator, reward_generator, reward_generator2, iid):
         super().__init__(action_space, ob_generator, reward_generator, reward_generator2)
 
         self.iid = iid
