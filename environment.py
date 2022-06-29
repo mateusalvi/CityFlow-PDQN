@@ -29,16 +29,24 @@ class TSCEnv(gym.Env):
 
     def step(self, actions):
         assert len(actions) == self.n_agents
+        r1 = []
+        r2 = []
 
         self.world.step(actions)
 
         obs = [agent.get_ob() for agent in self.agents]
         rewards = [agent.get_reward() for agent in self.agents]
+        for r in rewards:
+            r1.append(r[0])
+            r2.append(r[1])
+
+        print("\nr1 = " + str(r1) + "\n r2 = " + str(r2) + "\n")
+
         dones = [False] * self.n_agents
         infos = {"metric": self.metric.update()}
         #infos = {}
 
-        return obs, rewards, dones, infos
+        return obs, r1,r2, dones, infos
 
     def reset(self):
         self.world.reset()

@@ -12,16 +12,16 @@ class RLAgent(BaseAgent):
 
     def get_reward(self):
         reward = self.reward_generator.generate()
-        print("\n\n\n\nreward\n\n\n\n")
-        print(reward)
-        print("\n\n\n\n\n\n\n\n")
+        #print("\n\n\n\nreward\n\n\n\n")
+       # print(reward)
+       # print("\n\n\n\n\n\n\n\n")
 
         
         reward2 = self.reward_generator2.generate()
 
-        print("\n\n\n\nreward2\n\n\n\n")
-        print(reward2)
-        print("\n\n\n\n\n\n\n\n")
+       # print("\n\n\n\nreward2: ")
+        #print(reward2)
+        #print("\n\n\n\n\n\n\n\n")
         
         assert len(reward) == 1
         assert len(reward2) == 1

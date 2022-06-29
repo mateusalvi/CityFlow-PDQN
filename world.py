@@ -219,6 +219,11 @@ class World(object):
                 if lane in out_lanes:
                     pressure -= vehicles[lane]
             pressures[i.id] = pressure
+
+        print("\n\n pressure \n")
+        print (pressures)
+        print(type(pressures))
+        print("\n")
         return pressures
 
     # return [self.dic_lane_waiting_vehicle_count_current_step[lane] for lane in self.list_entering_lanes] + \

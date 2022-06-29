@@ -56,7 +56,7 @@ for i in world.intersections:
         action_space,
         LaneVehicleGenerator(world, i, ["lane_count"], in_only=True, average=None),
         LaneVehicleGenerator(world, i, ["lane_waiting_count"], in_only=True, average="all", negative=True),
-        LaneVehicleGenerator(world, i, ["lane_waiting_count"], in_only=True, average="all", negative=True),
+        LaneVehicleGenerator(world, i, ["lane_delay"], in_only=True, average="all", negative=True),
         i.id
     ))
     if args.load_model:
@@ -91,12 +91,21 @@ def train(args, env):
                     else:
                         actions.append(agent.sample())
 
-                rewards_list = []
+                rewards_list1 = []
+                rewards_list2 = []
+
                 for _ in range(args.action_interval):
-                    obs, rewards, dones, _ = env.step(actions)
+                    obs, r1,r2, dones, _ = env.step(actions)
                     i += 1
-                    rewards_list.append(rewards)
-                rewards = np.mean(rewards_list, axis=0)
+                    rewards_list1.append(r1)
+                    rewards_list2.append(r2)
+                r1 = np.mean(rewards_list1, axis=0)
+                r2 = np.mean(rewards_list2, axis=0)
+
+                exit(7)
+                #to do:
+                #ver quantas ou como usar as nn's
+                #pressure mas seila
 
                 for agent_id, agent in enumerate(agents):
                     agent.remember(last_obs[agent_id], actions[agent_id], rewards[agent_id], obs[agent_id])

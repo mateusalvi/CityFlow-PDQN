@@ -52,12 +52,22 @@ class LaneVehicleGenerator(BaseGenerator):
         ret = np.array([])
         for i in range(len(self.fns)):
             result = results[i]
+            #print(result['road_1_2_3_2'])
+            #result['road_1_2_3_1'] = 0
             fn_result = np.array([])
 
             for road_lanes in self.lanes:
+                
                 road_result = []
                 for lane_id in road_lanes:
+                    #print("\n\nlane_id = " + lane_id + "\n" )
+                    #print("\n\nresult_lane_id = " + str(result[lane_id]) + "\n" )
+                    #if (lane_id == 'road_1_2_3_2'):
+                      #  print("ta aqui essa merda")
+                        #exit(6)
                     road_result.append(result[lane_id])
+                    
+
                 if self.average == "road" or self.average == "all":
                     road_result = np.mean(road_result)
                 else:

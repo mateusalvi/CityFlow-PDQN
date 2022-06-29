@@ -96,9 +96,9 @@ class RewardApproximator(nn.Module):
 
 	def __init__(self, nS, nA, nO, pareto_approximator=None, device='cpu'):
 		super(RewardApproximator, self).__init__()
-
-		self.nA = nA
-		self.nO = nO
+		#ns				#numero de parametros recebidos
+		self.nA = nA    #action space
+		self.nO = nO	#observation
 		self.device = device
 
 		fc1_in = nS[0]
