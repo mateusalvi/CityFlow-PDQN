@@ -3,6 +3,7 @@ from environment import TSCEnv
 from world import World
 from generator import LaneVehicleGenerator
 from agent.dqn_agent import DQNAgent
+from agent.pdqn_agent import PDQNAgent
 from metric import TravelTimeMetric
 import argparse
 import os
@@ -52,7 +53,7 @@ world = World(args.config_file, thread_num=args.thread)
 agents = []
 for i in world.intersections:
     action_space = gym.spaces.Discrete(len(i.phases))
-    agents.append(DQNAgent(
+    agents.append(PDQNAgent(
         action_space,
         LaneVehicleGenerator(world, i, ["lane_count"], in_only=True, average=None),
         LaneVehicleGenerator(world, i, ["lane_waiting_count"], in_only=True, average="all", negative=True),
@@ -84,13 +85,16 @@ def train(args, env):
         while i < args.steps:
             if i % args.action_interval == 0:
                 actions = []
+                
+                ####estimator
                 for agent_id, agent in enumerate(agents):
                     if total_decision_num > agent.learning_start:
                     #if True:
                         actions.append(agent.get_action(last_obs[agent_id]))
                     else:
                         actions.append(agent.sample())
-
+                #######
+                
                 rewards_list1 = []
                 rewards_list2 = []
 
@@ -116,12 +120,16 @@ def train(args, env):
                 last_obs = obs
 
             for agent_id, agent in enumerate(agents):
+                ##every C steps copy NDt to NDt
                 if total_decision_num > agent.learning_start and total_decision_num % agent.update_model_freq == agent.update_model_freq - 1:
                     agent.replay()
+                ###############################
                 if total_decision_num > agent.learning_start and total_decision_num % agent.update_target_model_freq == agent.update_target_model_freq - 1:
                     agent.update_target_network()
             if all(dones):
                 break
+
+        
         if e % args.save_rate == args.save_rate - 1:
             if not os.path.exists(args.save_dir):
                 os.makedirs(args.save_dir)
